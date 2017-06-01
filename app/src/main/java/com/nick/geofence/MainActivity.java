@@ -1,5 +1,6 @@
 package com.nick.geofence;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int ADD_GEOFECE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,5 +30,17 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Geofence(30,35,100,"DataHub"));
 
         listView.setAdapter(new GeofenceAdapter(this,list));
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(MainActivity.this,AddGeofence.class),ADD_GEOFECE);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

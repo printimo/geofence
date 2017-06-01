@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Geofence</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="wifi_name">WIFI name</string>
+    <string name="pick_location_on_maps">Pick location on Google Maps</string>
+    <string name="radius">radius</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="SAVE">SAVE</string>
 </resources>

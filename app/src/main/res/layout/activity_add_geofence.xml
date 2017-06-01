@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nick.geofence.AddGeofence">
+
+    <ImageView
+        android:id="@+id/pick_location_button"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/gmaps_icon"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignBottom="@+id/add_geofence_longitude"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="28dp" />
+
+    <EditText
+        android:id="@+id/add_geofence_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/latitude"
+        android:layout_toLeftOf="@+id/pick_location_button"
+        android:layout_marginRight="30dp"
+        />
+
+    <EditText
+        android:id="@+id/add_geofence_longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="60dp"
+        android:hint="@string/longitude"
+        android:layout_toLeftOf="@+id/pick_location_button"
+        android:layout_marginRight="30dp"/>
+
+    <EditText
+        android:id="@+id/add_geofence_radius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="100dp"
+        android:hint="@string/radius"
+        android:layout_toLeftOf="@+id/pick_location_button"
+        android:layout_marginRight="30dp"/>
+
+    <EditText
+        android:id="@+id/add_geofence_wifi_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="140dp"
+        android:hint="@string/wifi_name"
+        android:layout_toLeftOf="@+id/pick_location_button"
+        android:layout_marginRight="30dp"
+        />
+
+    <TextView
+        android:id="@+id/add_geofence_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/round_blue"
+        android:layout_margin="40dp"
+        android:text="@string/SAVE"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textStyle="bold"/>
+
+</RelativeLayout>
