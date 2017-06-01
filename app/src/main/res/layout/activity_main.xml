@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="60dp"/>
 
     <ImageView
         android:id="@+id/add_geofence"

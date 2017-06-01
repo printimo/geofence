@@ -28,7 +28,7 @@ public class DataPrefences {
         return new Gson().fromJson(getInstance().getString(LIST,""), GeofenceList.class);
     }
 
-    public static void saveGeofenceList(List<Geofence> list) {
+    public static void saveGeofenceList(List<GeofenceInfo> list) {
         getInstance().edit().putString(LIST, new Gson().toJson(new GeofenceList(list))).apply();
     }
 

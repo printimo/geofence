@@ -4,14 +4,14 @@ package com.nick.geofence;
  * Created by root on 1/6/17.
  */
 
-public class Geofence {
+public class GeofenceInfo {
 
     private double longitude;
     private double latitude;
     private int radius; // meters
     private String wifiName;
 
-    public Geofence(double longt, double lat, int rad, String wifi) {
+    public GeofenceInfo(double longt, double lat, int rad, String wifi) {
         longitude = longt;
         latitude = lat;
         wifiName = wifi;

@@ -36,7 +36,7 @@ public class AddGeofence extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new LocationPickerActivity.Builder()
-                        .withLocation(41.4036299, 2.1743558)
+                        .withLocation(getIntent().getDoubleExtra("lat",0), getIntent().getDoubleExtra("long",0))
                         .withSearchZone("es_ES")
                         .shouldReturnOkOnBackPressed()
                         .withStreetHidden()

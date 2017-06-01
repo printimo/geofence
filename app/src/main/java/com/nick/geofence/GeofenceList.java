@@ -1,6 +1,5 @@
 package com.nick.geofence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,17 +8,17 @@ import java.util.List;
 
 public class GeofenceList {
 
-    private List<Geofence> list;
+    private List<GeofenceInfo> list;
 
-    public GeofenceList(List<Geofence> list) {
+    public GeofenceList(List<GeofenceInfo> list) {
         this.list = list;
     }
 
-    public List<Geofence> getList() {
+    public List<GeofenceInfo> getList() {
         return list;
     }
 
-    public void setList(List<Geofence> list) {
+    public void setList(List<GeofenceInfo> list) {
         this.list = list;
     }
 }

@@ -1,24 +1,30 @@
 package com.nick.geofence;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Handler;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     private TextView locationText;
     private String provider;
+    private Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,28 +52,47 @@ public class MainActivity extends AppCompatActivity {
         listView.setLayoutManager(layoutManager);
 
         GeofenceList geolist = DataPrefences.getGeofenceList();
-        List<Geofence> list = new ArrayList<>();
+        List<GeofenceInfo> list = new ArrayList<>();
 
         if (geolist == null || geolist.getList() == null) {
 
-            list.add(new Geofence(20, 30, 100, ""));
-            list.add(new Geofence(30, 35, 100, "DataHub"));
+            list.add(new GeofenceInfo(20, 30, 150, ""));
+            list.add(new GeofenceInfo(30, 35, 100, "DataHub"));
+            GeofenceController.setList(list);
         } else {
             list = geolist.getList();
         }
 
         listView.setAdapter(adapter = new GeofenceAdapter(this, list));
+        adapter.setCurrentWifi(getCurrentSSID(this));
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(MainActivity.this, AddGeofence.class), ADD_GEOFECE);
+                Intent intent = new Intent(MainActivity.this, AddGeofence.class);
+                if (currentLocation!=null) {
+                    intent.putExtra("lat",currentLocation.getLatitude());
+                    intent.putExtra("long",currentLocation.getLongitude());
+                } else {
+                    intent.putExtra("lat",50.41);
+                    intent.putExtra("long",30.66);
+                }
+                startActivityForResult(intent, ADD_GEOFECE);
             }
         });
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
     }
+
+    //receives if wifi was changed
+    private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            adapter.setCurrentWifi(getCurrentSSID(App.getContext()));
+            Toast.makeText(App.getContext(), "connected to " + getCurrentSSID(App.getContext()),Toast.LENGTH_LONG).show();
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -84,10 +110,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Geofence newGeofence = new Geofence(data.getDoubleExtra("long",0),
-                data.getDoubleExtra("lat",0),data.getIntExtra("radius",1),data.getStringExtra("wifi"));
-        adapter.add(newGeofence);
-        DataPrefences.saveGeofenceList(adapter.getList());
+        if (resultCode == RESULT_OK) {
+            GeofenceInfo newGeofence = new GeofenceInfo(data.getDoubleExtra("long", 0),
+                    data.getDoubleExtra("lat", 0), data.getIntExtra("radius", 1), data.getStringExtra("wifi"));
+            adapter.add(newGeofence);
+            GeofenceController.add(newGeofence);
+            DataPrefences.saveGeofenceList(adapter.getList());
+        }
     }
 
     @Override
@@ -108,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                currentLocation = location;
                 showLocation();
             }
 
@@ -148,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (location!=null) {
             locationText.setText("Current location : \n" + location.getLatitude() + "\n" + location.getLongitude());
+            adapter.setCurrentLocation(location);
             final Location finalLocation = location;
             locationText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -175,5 +206,25 @@ public class MainActivity extends AppCompatActivity {
             locationManager.removeUpdates(listener);
         }
         listener = null;
+        unregisterReceiver(wifiReceiver);
+    }
+
+    public static String getCurrentSSID(Context context) {
+        String ssid = null;
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo == null) {
+            return null;
+        }
+
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+            if (connectionInfo != null) {
+                ssid = connectionInfo.getSSID();
+            }
+        }
+
+        return ssid;
     }
 }

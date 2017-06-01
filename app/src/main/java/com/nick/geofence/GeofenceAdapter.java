@@ -2,8 +2,8 @@ package com.nick.geofence;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +19,12 @@ import java.util.List;
 
 public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.GeofenceViewHolder>{
 
-    private List<Geofence> list = new ArrayList<>();
+    private List<GeofenceInfo> list = new ArrayList<>();
     private Activity activity;
+    private Location currentLocation;
+    private String currentWifi;
 
-    public GeofenceAdapter(Activity act, List<Geofence> arr) {
+    public GeofenceAdapter(Activity act, List<GeofenceInfo> arr) {
         list = arr;
         activity = act;
     }
@@ -49,6 +51,19 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
                 activity.startActivity(intent);
             }
         });
+        if (currentLocation!=null) {
+            if (distFrom(currentLocation.getLatitude(),currentLocation.getLongitude(),
+                    list.get(position).getLatitude(),list.get(position).getLongitude()) < list.get(position).getRadius()
+                    || currentWifi.equals(list.get(position).getWifiName())) {
+                holder.inside.setText("inside");
+                holder.inside.setTextColor(App.getContext().getResources().getColor(R.color.green));
+            } else {
+                holder.inside.setText("outside");
+                holder.inside.setTextColor(App.getContext().getResources().getColor(R.color.red));
+            }
+        } else {
+            holder.inside.setText("");
+        }
     }
 
     @Override
@@ -56,13 +71,36 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
         return list.size();
     }
 
-    public void add(Geofence newGeofence) {
+    public void add(GeofenceInfo newGeofence) {
         list.add(newGeofence);
         notifyDataSetChanged();
     }
 
-    public List<Geofence> getList() {
+    public List<GeofenceInfo> getList() {
         return list;
+    }
+
+    public static float distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
+        notifyDataSetChanged();
+    }
+
+    public void setCurrentWifi(String currentWifi) {
+        this.currentWifi = currentWifi;
+        notifyDataSetChanged();
     }
 
     public static class GeofenceViewHolder extends RecyclerView.ViewHolder {
