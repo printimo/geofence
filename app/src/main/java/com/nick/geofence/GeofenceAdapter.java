@@ -34,8 +34,9 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
 
     @Override
     public void onBindViewHolder(GeofenceViewHolder holder, final int position) {
-        holder.latitude.setText(String.valueOf(list.get(position).getLatitude()));
-        holder.longitude.setText(String.valueOf(list.get(position).getLongitude()));
+        holder.latitude.setText("Latitude : " + String.valueOf(list.get(position).getLatitude()));
+        holder.longitude.setText("Longitude : " + String.valueOf(list.get(position).getLongitude()));
+        holder.radius.setText("Radius : " + String.valueOf(list.get(position).getRadius() + " m"));
         holder.wifi.setText(String.valueOf(list.get(position).getWifiName()));
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,10 +56,20 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
         return list.size();
     }
 
+    public void add(Geofence newGeofence) {
+        list.add(newGeofence);
+        notifyDataSetChanged();
+    }
+
+    public List<Geofence> getList() {
+        return list;
+    }
+
     public static class GeofenceViewHolder extends RecyclerView.ViewHolder {
 
         public TextView longitude;
         public TextView latitude;
+        public TextView radius;
         public TextView wifi;
         public TextView inside;
         public View card;
@@ -70,6 +81,7 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
             wifi = (TextView) itemView.findViewById(R.id.list_item_wifi);
             inside = (TextView) itemView.findViewById(R.id.list_item_inside);
             card = itemView.findViewById(R.id.list_item_card_view);
+            radius = (TextView) itemView.findViewById(R.id.list_item_radius);
         }
     }
 
