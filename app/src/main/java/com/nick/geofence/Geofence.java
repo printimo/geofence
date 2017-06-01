@@ -6,32 +6,32 @@ package com.nick.geofence;
 
 public class Geofence {
 
-    private long longtitude;
-    private long latitute;
+    private long longitude;
+    private long latitude;
     private int radius; // meters
     private String wifiName;
 
     public Geofence(long longt, long lat, int rad, String wifi) {
-        longtitude = longt;
-        latitute = lat;
+        longitude = longt;
+        latitude = lat;
         wifiName = wifi;
         radius = rad;
     }
 
-    public long getLongtitude() {
-        return longtitude;
+    public long getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(long longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(long longitude) {
+        this.longitude = longitude;
     }
 
-    public long getLatitute() {
-        return latitute;
+    public long getLatitude() {
+        return latitude;
     }
 
-    public void setLatitute(long latitute) {
-        this.latitute = latitute;
+    public void setLatitude(long latitude) {
+        this.latitude = latitude;
     }
 
     public String getWifiName() {

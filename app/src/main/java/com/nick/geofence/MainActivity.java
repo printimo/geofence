@@ -23,6 +23,6 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Geofence(20,30,100,""));
         list.add(new Geofence(30,35,100,"DataHub"));
 
-
+        listView.setAdapter(new GeofenceAdapter(list));
     }
 }
