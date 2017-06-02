@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            GeofenceInfo newGeofence = new GeofenceInfo(data.getDoubleExtra("long", 0),
-                    data.getDoubleExtra("lat", 0), data.getIntExtra("radius", 1), data.getStringExtra("wifi"));
+            GeofenceInfo newGeofence = new GeofenceInfo(data.getDoubleExtra("lat", 0),
+                    data.getDoubleExtra("long", 0), data.getIntExtra("radius", 1), data.getStringExtra("wifi"));
             adapter.add(newGeofence);
             DataPrefences.saveGeofenceList(adapter.getList());
         }
