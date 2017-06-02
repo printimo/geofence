@@ -54,7 +54,7 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
         if (currentLocation!=null) {
             if (distFrom(currentLocation.getLatitude(),currentLocation.getLongitude(),
                     list.get(position).getLatitude(),list.get(position).getLongitude()) < list.get(position).getRadius()
-                    || currentWifi.equals(list.get(position).getWifiName())) {
+                    || (currentWifi!=null && currentWifi.equals(list.get(position).getWifiName()))) {
                 holder.inside.setText("inside");
                 holder.inside.setTextColor(App.getContext().getResources().getColor(R.color.green));
             } else {

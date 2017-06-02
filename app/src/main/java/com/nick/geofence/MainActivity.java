@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,12 +86,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //receives if wifi was changed
-    private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
-        @Override
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            Log.e("Trigger", "getNetworkInfo");
+          //  Toast.makeText(App.getContext(), "connected to " + getCurrentSSID(App.getContext()),Toast.LENGTH_LONG).show();
             adapter.setCurrentWifi(getCurrentSSID(App.getContext()));
-            Toast.makeText(App.getContext(), "connected to " + getCurrentSSID(App.getContext()),Toast.LENGTH_LONG).show();
         }
     };
 
@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getLocation();
         }
+        registerReceiver(receiver, new IntentFilter("android.net.wifi.STATE_CHANGE"));
     }
 
     @Override
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             locationManager.removeUpdates(listener);
         }
         listener = null;
-        unregisterReceiver(wifiReceiver);
+        unregisterReceiver(receiver);
     }
 
     public static String getCurrentSSID(Context context) {
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
             if (connectionInfo != null) {
-                ssid = connectionInfo.getSSID();
+                ssid = connectionInfo.getSSID().replace("\"","");
             }
         }
 
