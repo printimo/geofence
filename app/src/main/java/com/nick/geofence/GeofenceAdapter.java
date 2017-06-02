@@ -43,7 +43,7 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strUri = "http://maps.google.com/maps?q=loc:" + list.get(position).getLatitude() + "," + list.get(position).getLongitude() + " (" + "Label which you want" + ")";
+                String strUri = "http://maps.google.com/maps?q=loc:" + list.get(position).getLatitude() + "," + list.get(position).getLongitude() + " (" + "Geofence location" + ")";
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
 
                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");

@@ -11,7 +11,7 @@ public class GeofenceInfo {
     private int radius; // meters
     private String wifiName;
 
-    public GeofenceInfo(double longt, double lat, int rad, String wifi) {
+    public GeofenceInfo(double lat, double longt, int rad, String wifi) {
         longitude = longt;
         latitude = lat;
         wifiName = wifi;

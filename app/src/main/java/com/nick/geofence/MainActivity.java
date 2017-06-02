@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView locationText;
     private String provider;
     private Location currentLocation;
+    private View searching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         locationText = (TextView) findViewById(R.id.current_location);
         View add = findViewById(R.id.add_geofence);
+        searching = findViewById(R.id.searching);
         RecyclerView listView = (RecyclerView) findViewById(R.id.geofence_list);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         listView.setLayoutManager(layoutManager);
@@ -60,8 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (geolist == null || geolist.getList() == null) {
 
-            list.add(new GeofenceInfo(20, 30, 150, ""));
-            list.add(new GeofenceInfo(30, 35, 100, "DataHub"));
+            list.add(new GeofenceInfo(20, 30, 150, "Wifi"));
+            list.add(new GeofenceInfo(34.052, -118.2436, 20000, "Los Angeles"));
+            list.add(new GeofenceInfo(50.449, 30.524, 5000, "Maidan"));
             GeofenceController.setList(list);
         } else {
             list = geolist.getList();
@@ -216,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (location!=null) {
+            searching.setVisibility(View.GONE);
             locationText.setText("Current location : \n" + location.getLatitude() + "\n" + location.getLongitude());
             adapter.setCurrentLocation(location);
             final Location finalLocation = location;
