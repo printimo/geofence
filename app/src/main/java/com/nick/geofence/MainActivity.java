@@ -3,6 +3,7 @@ package com.nick.geofence;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -18,10 +19,12 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -83,7 +86,43 @@ public class MainActivity extends AppCompatActivity {
         });
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition(); //get position which is swipe
+
+                if (direction == ItemTouchHelper.LEFT) {    //if swipe left
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this); //alert for confirm to delete
+                    builder.setMessage("Are you sure to delete?");    //set message
+
+                    builder.setPositiveButton("REMOVE", new DialogInterface.OnClickListener() { //when click on DELETE
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            adapter.getList().remove(position);
+                            DataPrefences.saveGeofenceList(adapter.getList());
+                            adapter.notifyItemRemoved(position);    //item removed from recylcerview
+                            return;
+                        }
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {  //not removing items if cancel is done
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            adapter.notifyItemRemoved(position + 1);    //notifies the RecyclerView Adapter that data in adapter has been removed at a particular position.
+                            adapter.notifyItemRangeChanged(position, adapter.getItemCount());   //notifies the RecyclerView Adapter that positions of element in adapter has been changed from position(removed element index to end of list), please update it.
+                            return;
+                        }
+                    }).show();  //show alert dialog
+                }
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(listView);
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -115,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
             GeofenceInfo newGeofence = new GeofenceInfo(data.getDoubleExtra("long", 0),
                     data.getDoubleExtra("lat", 0), data.getIntExtra("radius", 1), data.getStringExtra("wifi"));
             adapter.add(newGeofence);
-            GeofenceController.add(newGeofence);
             DataPrefences.saveGeofenceList(adapter.getList());
         }
     }

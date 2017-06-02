@@ -103,6 +103,9 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceAdapter.Geofen
         notifyDataSetChanged();
     }
 
+    public void removeItem(RecyclerView.ViewHolder viewHolder) {
+    }
+
     public static class GeofenceViewHolder extends RecyclerView.ViewHolder {
 
         public TextView longitude;
