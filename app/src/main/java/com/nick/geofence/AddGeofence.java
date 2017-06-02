@@ -52,6 +52,9 @@ public class AddGeofence extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (radius.getText().toString().equals("")) {
+                    radius.setText("100");
+                }
                 Intent intent = new Intent();
                 intent.putExtra("long",Double.valueOf(longitudeText.getText().toString()));
                 intent.putExtra("lat",Double.valueOf(latitudeText.getText().toString()));
